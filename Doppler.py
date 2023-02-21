@@ -33,8 +33,6 @@ while True:
 
 # At this point, the directory should be empty
 
-time.sleep(1)
-
 # The rest of your code goes here
 
 # Open video
