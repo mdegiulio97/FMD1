@@ -15,6 +15,8 @@ for file in os.scandir(current_directory):
     if file.name.startswith("frame_") and file.name.endswith(".png"):
         os.remove(file.path)
 
+time.sleep(1)
+
 # Wait for the directory to be completely emptied
 while any(fname.startswith("frame_") for fname in os.listdir(current_directory)):
     pass
@@ -34,6 +36,12 @@ while True:
 # At this point, the directory should be empty
 
 # The rest of your code goes here
+dir_path = 'C:\\Users\\info\\PycharmProject\\FMD1\\Doppler.py'
+
+if os.access(dir_path, os.R_OK):
+    print("You have permissions to read the directory")
+else:
+    print("You don’t have permissions to read the directory")
 
 # Open video
 cap = cv2.VideoCapture('C:\\Users\\info\\OneDrive\\Desktop\\FMD\\video\\Braq10.mp4')
@@ -58,15 +66,8 @@ while True:
     if not ret:
         break
 
-    # create a mask for select ROI
-    mask = np.zeros_like(frame)
-    mask[ref_y:ref_y + ref_h, ref_x:ref_x + ref_w] = 255
-    # Extract the part of the frame that is within the ROI
-    roi = cv2.bitwise_and(frame, mask)
-    # Resizes the extracted ROI initially based on the size of the selected ROI later
-    roi = cv2.resize(roi, (ref_w, ref_h))
-    # use initial ROI for all frame 
-    frame[ref_y:ref_y+ref_h, ref_x:ref_x+ref_w] = roi
+    # use initial ROI for all frame
+    roi = frame[ref_y:ref_y+ref_h, ref_x:ref_x+ref_w]
 
     # Save the ROI like image
     filename = f'frame_{counter:04d}.png'
@@ -89,13 +90,30 @@ image_files = sorted(glob.glob("frame_*.png"))
 # Load images from file name list
 images = []
 for filename in image_files:
-    images.append(cv2.imread(filename))
+    img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
+    images.append(img)
 
-# Concatenate images horizontally
-result = cv2.hconcat(images)
+# Calculate differences between adjacent images
+diff_images = []
+for i in range(len(images) - 1):
+    diff = cv2.absdiff(images[i], images[i+1])
+    diff_images.append(diff)
 
-# Show the resulting image
-cv2.imshow('Concatenated Image', result)
+# Save the difference images like image
+for i, diff in enumerate(diff_images):
+    filename = f'diff_{i:04d}.png'
+    cv2.imwrite(filename, diff)
+
+# Show the difference images as a "video" and a video of difference
+frame_rate = 50
+for img, diff_img in zip(images, diff_images):
+    cv2.imshow("ROI Video", img)
+    cv2.imshow("Difference Image", (diff_img * 25))
+    # Wait for a certain amount of time (in milliseconds) depending on the desired frame rate
+    cv2.waitKey(int(1000 / frame_rate))
+
+    if cv2.waitKey(1) == ord('q'):
+        break
 
 cv2.waitKey(0)
 
