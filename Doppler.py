@@ -15,10 +15,17 @@ for file in os.scandir(current_directory):
     if file.name.startswith("frame_") and file.name.endswith(".png"):
         os.remove(file.path)
 
+# Remove all files that match the pattern
+for file in os.scandir(current_directory):
+    if file.name.startswith("diff_") and file.name.endswith(".png"):
+        os.remove(file.path)
+
 time.sleep(1)
 
 # Wait for the directory to be completely emptied
 while any(fname.startswith("frame_") for fname in os.listdir(current_directory)):
+    pass
+while any(fname.startswith("diff_") for fname in os.listdir(current_directory)):
     pass
 
 # Wait for the directory to be completely emptied
@@ -32,8 +39,6 @@ while True:
         print("the directory is empty")
         # No more files matching the pattern, break out of the loop
         break
-
-# At this point, the directory should be empty
 
 # The rest of your code goes here
 dir_path = 'C:\\Users\\info\\PycharmProject\\FMD1\\Doppler.py'
