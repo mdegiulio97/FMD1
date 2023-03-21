@@ -41,7 +41,7 @@ while True:
         break
 
 # The rest of your code goes here
-dir_path = 'C:\\Users\\info\\PycharmProject\\FMD1\\Doppler.py'
+dir_path = 'C:\\Users\\mdegi\\PycharmProjects\\FDM2\\FMD1\\Doppler.py'
 
 if os.access(dir_path, os.R_OK):
     print("You have permissions to read the directory")
@@ -49,7 +49,7 @@ else:
     print("You don’t have permissions to read the directory")
 
 # Open video
-cap = cv2.VideoCapture('C:\\Users\\info\\OneDrive\\Desktop\\FMD\\video\\Braq10.mp4')
+cap = cv2.VideoCapture('C:\\qUsers\\mdegi\\OneDrive\\Desktop\\Work\\FMD\\video\\Braq10.mp4')
 
 # read first frame
 ret, frame = cap.read()
@@ -122,6 +122,8 @@ for img, diff_img in zip(images, diff_images):
 
 cv2.waitKey(0)
 
-cap.release() # release video
+# release video
+cap.release()
 
-cv2.destroyAllWindows() # close all windows
+# close all windows
+cv2.destroyAllWindows()
