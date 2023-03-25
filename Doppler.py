@@ -3,6 +3,7 @@ import cv2
 import glob2 as glob
 import os
 import time
+import matplotlib.pyplot as plt
 
 # Set the current directory
 current_directory = os.getcwd()
@@ -49,7 +50,7 @@ else:
     print("You don’t have permissions to read the directory")
 
 # Open video
-cap = cv2.VideoCapture('C:\\qUsers\\mdegi\\OneDrive\\Desktop\\Work\\FMD\\video\\Braq10.mp4')
+cap = cv2.VideoCapture('C:\\Users\\mdegi\\OneDrive\\Desktop\\Work\\FMD\\video\\Braq10.mp4')
 
 # read first frame
 ret, frame = cap.read()
@@ -120,6 +121,21 @@ for img, diff_img in zip(images, diff_images):
     if cv2.waitKey(1) == ord('q'):
         break
 
+# Calculate average pixel intensity within ROI for each difference image
+intensity_values = []
+for diff in diff_images:
+    roi_diff = diff[ref_y:ref_y+ref_h, ref_x:ref_x+ref_w]
+    _, bin_roi_diff = cv2.threshold(roi_diff, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    if bin_roi_diff is not None:  # check if thresholding was successful
+        intensity = np.mean(bin_roi_diff)
+        intensity_values.append(intensity)
+
+plt.plot(intensity_values)
+plt.title("Doppler Envelope")
+plt.xlabel("Frame Number")
+plt.ylabel("Intensity")
+plt.show()
+
 cv2.waitKey(0)
 
 # release video
@@ -127,3 +143,4 @@ cap.release()
 
 # close all windows
 cv2.destroyAllWindows()
+
