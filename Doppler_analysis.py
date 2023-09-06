@@ -40,6 +40,7 @@ while True:
         # Nessun altro file corrisponde al pattern, esci dal ciclo
         break
 
+
 # Il resto del tuo codice va qui
 
 # Apre il video
